@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background Image -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_image"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
+
+    <!-- Card -->
+    <LinearLayout
+        android:layout_width="334dp"
+        android:layout_height="249dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_card"
+        android:backgroundTint="#C6EAFD"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <!-- App Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="UniteALL"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <!-- Tagline -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Discover. Connect. Play."
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Google Sign In Button -->
+        <Button
+            android:id="@+id/btnGoogleSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4285F4"
+            android:drawableStart="@drawable/ic_google"
+            android:drawablePadding="12dp"
+            android:elevation="4dp"
+            android:padding="12dp"
+            android:text="Continue with Google"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <!-- Motivation Footer -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Join today and start building your community."
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
+</RelativeLayout>
