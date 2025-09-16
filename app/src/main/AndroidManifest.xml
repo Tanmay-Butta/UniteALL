@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ✅ Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -14,10 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme._4all">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
+        <!-- Optional legacy support -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
-        <!-- SplashActivity will launch first -->
+        <!-- SplashActivity (entry point) -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -27,22 +33,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity" />
 
-        <activity android:name=".DetailsActivity" />
-        <!-- SignInActivity (after splash if not logged in) -->
+        <!-- Login -->
         <activity
             android:name=".SignInActivity"
             android:exported="true"
             android:label="@string/app_name" />
+
+        <!-- User Profile -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.events.PostEventActivity"
+            android:exported="false" />
+        <!-- Event Details -->
+        <activity
+            android:name=".DetailsActivity"
+            android:exported="false" />
+
+        <!-- Location Activity -->
         <activity
             android:name=".LocationActivity"
             android:exported="false" />
-        <!-- MainActivity (after login) -->
+
+        <!-- Main Activity (hosts fragments like HomeFragment) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name" />
-    </application>
 
+        <!-- NOTE: Fragments (HomeFragment) do not need to be declared in manifest -->
+    </application>
 </manifest>

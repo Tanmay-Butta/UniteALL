@@ -18,9 +18,9 @@ import com.bumptech.glide.Glide
 import com.example.a4all.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         // Load user profile photo in top bar
         loadUserProfilePhoto()
 
+        // Fetch GPS or Firestore location
         getLocation()
 
         locationLayout.setOnClickListener {
@@ -83,11 +84,10 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 val imageUrl = document.getString("profileImage")
                 if (!imageUrl.isNullOrEmpty()) {
-                    // Load photo in top bar ImageView
                     Glide.with(this)
                         .load(imageUrl)
-                        .circleCrop() // Makes it a circle
-                        .placeholder(R.drawable.ic_person) // fallback if no image
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_person)
                         .into(profileButton)
                 }
             }
@@ -126,16 +126,33 @@ class MainActivity : AppCompatActivity() {
 
                         locationTitle.text = precise
                         locationSubtitle.text = if (locality.isNotEmpty()) locality else adminArea
-                    } else {
-                        locationTitle.text = "Unknown"
-                        locationSubtitle.text = "Location"
                     }
+
+                    // ✅ Pass to HomeFragment
+                    navigateToHome(location.latitude, location.longitude)
+
                 } else {
-                    locationTitle.text = "Unable to fetch"
-                    locationSubtitle.text = "Location"
+                    // fallback to Firestore user profile location
+                    val uid = auth.currentUser?.uid ?: return@addOnSuccessListener
+                    db.collection("users").document(uid).get().addOnSuccessListener { doc ->
+                        val userLat = doc.getDouble("latitude") ?: 0.0
+                        val userLng = doc.getDouble("longitude") ?: 0.0
+                        locationTitle.text = "From profile"
+                        locationSubtitle.text = "Stored location"
+                        navigateToHome(userLat, userLng)
+                    }
                 }
             }
         }
+    }
+
+    private fun navigateToHome(lat: Double, lng: Double) {
+        val bundle = Bundle().apply {
+            putDouble("userLat", lat)
+            putDouble("userLng", lng)
+        }
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController.navigate(R.id.navigation_home, bundle)
     }
 
     override fun onRequestPermissionsResult(
