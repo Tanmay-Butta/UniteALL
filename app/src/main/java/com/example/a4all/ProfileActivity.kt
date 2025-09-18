@@ -1,10 +1,13 @@
 package com.example.a4all
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -26,11 +29,39 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val original = ContextCompat.getDrawable(this, R.drawable.ic_back) ?: return
+        val width = 50
+        val height = 50
+
+        val bitmap = Bitmap.createScaledBitmap(
+            (original as BitmapDrawable).bitmap,
+            width,
+            height,
+            true
+        )
+        val scaledDrawable = BitmapDrawable(resources, bitmap)
+        binding.profileToolbar.navigationIcon = scaledDrawable
 
         loadUserDetails()
 
+        // ✅ Upload button
         binding.btnUploadPhoto.setOnClickListener {
             openImageChooser()
+        }
+
+        // ✅ Toolbar back button logic
+        binding.profileToolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // ✅ Logout button logic
+        binding.btnLogout.setOnClickListener {
+            auth.signOut()
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SignInActivity::class.java) // Change to your login activity
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 

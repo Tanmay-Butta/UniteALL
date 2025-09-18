@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/ic_bg3"
     tools:context=".ui.dashboard.DashboardFragment">
 
     <!-- Top Banner / Image -->
@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
+        android:background="@drawable/ic_post"
         android:contentDescription="@drawable/ic_placeholder"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +82,7 @@
         android:drawableStart="@android:drawable/ic_input_add"
         android:drawablePadding="12dp"
         app:cornerRadius="30dp"
-        app:backgroundTint="@color/purple_500"
+        app:backgroundTint="#1B75F4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

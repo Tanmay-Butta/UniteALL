@@ -26,10 +26,7 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Optional: Keep dashboard text logic
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            binding.textHeading.text = it  // now using the heading text instead of old text_dashboard
-        }
+     
 
         // Handle "Post New Event" button click
         binding.btnPostEvent.setOnClickListener {

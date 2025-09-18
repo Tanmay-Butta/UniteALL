@@ -1,0 +1,303 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F9FF">
+
+    <!-- Top Bar -->
+    <TextView
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:padding="18dp"
+        android:text="Event Details"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:gravity="center" />
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topBar"
+        android:layout_above="@id/registerButton"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="80dp">
+
+            <!-- Banner Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:id="@+id/eventBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_placeholder" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Title Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="12dp"
+                app:strokeColor="#1976D2"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Event Title"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/eventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dandiya Night"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1976D2"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Description Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/eventDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dandiya fun dance event with music and food!"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Address Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/eventAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Laxmi Nagar, Delhi"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Category Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Category"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/eventCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fun"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Date & Time Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Date + Time"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/eventDateTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sept 27, 9:30 AM - 5:30 PM"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Participants Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/participantsLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Participants"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:paddingBottom="8dp" />
+
+                    <LinearLayout
+                        android:id="@+id/participantsContainer"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Map Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#444444"
+                        android:paddingBottom="8dp"/>
+
+                    <!-- ✅ OSM MapView -->
+                    <org.osmdroid.views.MapView
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Navigate Button -->
+                    <Button
+                        android:id="@+id/navigateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Navigate"
+                        android:backgroundTint="#0B2DF8"
+                        android:textColor="@android:color/white"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Register Button (Sticky Bottom) -->
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:backgroundTint="#04AB23"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:elevation="8dp"
+        android:padding="16dp"
+        android:stateListAnimator="@null" />
+</RelativeLayout>

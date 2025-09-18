@@ -1,5 +1,6 @@
 package com.example.a4all.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a4all.R
 import com.example.a4all.adapters.EventAdapter
 import com.example.a4all.models.Event
+import com.example.a4all.ui.events.EventDetailsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -40,11 +42,17 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.eventsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        getUserLocation { lat, lng ->
-            adapter = EventAdapter(events, lat, lng)
+       getUserLocation { lat, lng ->
+            adapter = EventAdapter(events, lat, lng) { event ->
+                // ✅ Navigate to EventDetailsActivity
+                val intent = Intent(requireContext(), EventDetailsActivity::class.java)
+                intent.putExtra("eventId", event.eventId) // from your model
+                startActivity(intent)
+            }
             recyclerView.adapter = adapter
             loadEvents()
         }
+
 
         return view
     }

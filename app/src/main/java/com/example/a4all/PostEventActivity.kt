@@ -116,15 +116,13 @@ class PostEventActivity : AppCompatActivity() {
         val eventsOverlay = MapEventsOverlay(eventsReceiver)
         mapView.overlays.add(eventsOverlay)
 
-        // ✅ Update map when user enters address and presses "Done"/"Enter"
-        etAddress.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
+        etAddress.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
                 val addressText = etAddress.text.toString().trim()
                 if (addressText.isNotEmpty()) {
                     updateMapFromAddress(addressText)
                 }
-                true
-            } else false
+            }
         }
 
         // Pick Start Time
@@ -188,41 +186,59 @@ class PostEventActivity : AppCompatActivity() {
         }
 
     private fun uploadToCloudinary(uri: Uri) {
-        val filePath = getRealPathFromURI(uri) ?: return
-        val file = File(filePath)
-
-        val client = OkHttpClient()
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "file",
-                file.name,
-                file.asRequestBody("image/*".toMediaTypeOrNull())
-            )
-            .addFormDataPart("upload_preset", uploadPreset)
-            .build()
-
-        val request = Request.Builder()
-            .url("https://api.cloudinary.com/v1_1/$cloudName/image/upload")
-            .post(requestBody)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@PostEventActivity, "Upload failed", Toast.LENGTH_SHORT).show()
-                }
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                Toast.makeText(this, "Failed to open image", Toast.LENGTH_SHORT).show()
+                return
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                val json = JSONObject(response.body?.string() ?: "")
-                bannerUrl = json.optString("secure_url")
-                runOnUiThread {
-                    Toast.makeText(this@PostEventActivity, "Image Uploaded!", Toast.LENGTH_SHORT).show()
-                }
+            // Create temp file from inputStream
+            val tempFile = File.createTempFile("upload_", ".jpg", cacheDir)
+            tempFile.outputStream().use { output ->
+                inputStream.copyTo(output)
             }
-        })
+
+            val client = OkHttpClient()
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(
+                    "file",
+                    tempFile.name,
+                    tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+                )
+                .addFormDataPart("upload_preset", uploadPreset)
+                .build()
+
+            val request = Request.Builder()
+                .url("https://api.cloudinary.com/v1_1/$cloudName/image/upload")
+                .post(requestBody)
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    runOnUiThread {
+                        Toast.makeText(this@PostEventActivity, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val json = JSONObject(response.body?.string() ?: "")
+                    bannerUrl = json.optString("secure_url")
+                    runOnUiThread {
+                        if (bannerUrl.isNotEmpty()) {
+                            Toast.makeText(this@PostEventActivity, "Image Uploaded!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@PostEventActivity, "Upload error", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
+
 
     private fun getRealPathFromURI(uri: Uri): String? {
         val cursor = contentResolver.query(uri, null, null, null, null)

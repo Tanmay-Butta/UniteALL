@@ -16,7 +16,8 @@ import kotlin.math.*
 class EventAdapter(
     private val events: List<Event>,
     private val userLat: Double,
-    private val userLng: Double
+    private val userLng: Double,
+    private val onItemClick: (Event) -> Unit
 ) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -71,6 +72,9 @@ class EventAdapter(
         }
 
         holder.eventDistance.text = "${event.address} • ${"%.1f".format(distance)} km away"
+        holder.itemView.setOnClickListener {
+            onItemClick(event)
+        }
     }
 
     override fun getItemCount(): Int {

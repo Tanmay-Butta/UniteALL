@@ -86,6 +86,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0" ) // for images
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.google.android.libraries.places:places:3.5.0")
 
 
 

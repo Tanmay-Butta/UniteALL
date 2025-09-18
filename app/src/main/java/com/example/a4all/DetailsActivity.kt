@@ -1,25 +1,26 @@
 package com.example.a4all
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.example.a4all.databinding.ActivityDetailsBinding
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.*
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import org.osmdroid.events.MapEventsReceiver
-import org.osmdroid.views.overlay.MapEventsOverlay
+import android.location.Geocoder
+import androidx.core.widget.addTextChangedListener
+import java.util.*
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -33,6 +34,9 @@ class DetailsActivity : AppCompatActivity() {
 
     // Sports list for dropdown/chips
     private val sportsList = listOf("Cricket", "Football", "Basketball", "Tennis", "Hockey", "Badminton")
+
+    // Coroutine scope for geocoding debounce
+    private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +110,14 @@ class DetailsActivity : AppCompatActivity() {
 
         // Setup sports chips
         setupSportsChips()
+        binding.etAddress.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val addressText = binding.etAddress.text.toString().trim()
+                if (addressText.isNotEmpty()) {
+                    updateMapFromAddress(addressText)
+                }
+            }
+        }
 
         binding.btnSave.setOnClickListener {
             saveUserDetails()
@@ -135,6 +147,39 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+
+
+    private suspend fun geocodeAddress(address: String): GeoPoint? = withContext(Dispatchers.IO) {
+        try {
+            val geocoder = Geocoder(this@DetailsActivity, Locale.getDefault())
+            val results = geocoder.getFromLocationName(address, 1)
+            if (!results.isNullOrEmpty()) {
+                val loc = results[0]
+                return@withContext GeoPoint(loc.latitude, loc.longitude)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return@withContext null
+    }
+
+    private fun updateMapFromAddress(address: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val point = geocodeAddress(address)
+            if (point != null) {
+                addMarker(point, address)
+                mapView.controller.setZoom(15.0)
+                mapView.controller.animateTo(point)
+
+                selectedLat = point.latitude
+                selectedLng = point.longitude
+                binding.etLocation.setText("${point.latitude}, ${point.longitude}")
+            } else {
+                Toast.makeText(this@DetailsActivity, "Location not found", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun saveUserDetails() {
         val uid = auth.currentUser?.uid
         if (uid == null) {
@@ -148,13 +193,11 @@ class DetailsActivity : AppCompatActivity() {
             return
         }
 
-
         val username = binding.etUsername.text.toString().trim()
         val ageStr = binding.etAge.text.toString().trim()
         val phone = binding.etPhone.text.toString().trim()
         val location = binding.etLocation.text.toString().trim()
 
-        // Validate input fields
         if (username.isEmpty() || ageStr.isEmpty() || phone.isEmpty() || location.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
@@ -176,7 +219,6 @@ class DetailsActivity : AppCompatActivity() {
             return
         }
 
-        // Collect selected sports
         val selectedSports = mutableListOf<String>()
         for (i in 0 until binding.chipGroupSports.childCount) {
             val chip = binding.chipGroupSports.getChildAt(i) as Chip
@@ -190,7 +232,6 @@ class DetailsActivity : AppCompatActivity() {
             return
         }
 
-        // Prepare user data
         val user = hashMapOf(
             "userId" to uid,
             "username" to username,
@@ -204,7 +245,6 @@ class DetailsActivity : AppCompatActivity() {
             "email" to auth.currentUser?.email
         )
 
-        // Save to Firestore
         db.collection("users").document(uid).set(user)
             .addOnSuccessListener {
                 Toast.makeText(this, "Details saved!", Toast.LENGTH_SHORT).show()
